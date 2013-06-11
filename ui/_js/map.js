@@ -41,7 +41,7 @@ function initialize() {
 				codeAddress(users[i],myposition)
 			}
 		} else {
-			console.error('Geocode was not successful for the following reason: ' + status)
+		//	console.error('Geocode was not successful for the following reason: ' + status)
 		}
 
 	});
@@ -72,10 +72,10 @@ function codeAddress(user, myposition) {
 
 
 			$("#list-area table tbody").append('<tr data-distance="'+ distAway+'"><td>'+user.name+'</td><td class="distance">'+distAway+'</td></tr>');
-			sort()
+			sort();
 			bindInfoWindow(marker, map, infoWindow, html);
 		} else {
-			console.error('Geocode was not successful for the following reason: ' + status)
+		//	console.error('Geocode was not successful for the following reason: ' + status)
 		}
 	});
 }
@@ -93,14 +93,16 @@ function sort(){
 	var $table = $('#list');
 	var $rows = $('tbody > tr', $table);
 	$rows.sort(function (a, b) {
-		var keyA = $(a).attr("data-distance");
-		var keyB = $(b).attr("data-distance");
+
+		var keyA = parseInt($(a).attr("data-distance"));
+		var keyB = parseInt($(b).attr("data-distance"));
 		if ($($sort).hasClass('asc')) {
 			return (keyA > keyB) ? 1 : 0;
 		} else {
 			return (keyA > keyB) ? 1 : 0;
 		}
 	});
+
 	$.each($rows, function (index, row) {
 		$table.append(row);
 	});
