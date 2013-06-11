@@ -47,12 +47,16 @@ margin: 0;
 		table td {
 			border-bottom: 1px dotted #ccc;;
 		}
-		table tr {
+		table tr.record {
 			cursor : pointer;
 
 		}
-		table tr:hover td {
+		table tr.record:hover td {
 			background-color: rgba(170, 170, 170, 0.4);
+		}
+
+		table tr.disabled td {
+			color: #999;
 		}
 		.distance {
 			text-align: right;

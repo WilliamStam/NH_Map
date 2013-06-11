@@ -88,12 +88,16 @@ function codeAddress(user, myposition) {
 			//console.log(position);
 
 
-			$("#list-area table tbody").append('<tr data-distance="'+ distAway+'" data-lat="'+ position.jb+'" data-lng="'+ position.kb+'"><td>'+user.name+'</td><td class="distance">'+ distAway_label+'</td></tr>');
+			$("#list-area table tbody").append('<tr data-distance="'+ distAway+'" data-lat="'+ position.jb+'" data-lng="'+ position.kb+'" class="record"><td>'+user.name+'</td><td class="distance">'+ distAway_label+'</td></tr>');
+
 			if (myposition) {
 				sort();
 			}
 			bindInfoWindow(marker, map, infoWindow, html);
 		} else {
+
+			$("#list-area table tbody").append('<tr data-distance="999999999" class="disabled" title="Couldnt find address - ' + user.address + '"><td>' + user.name + '</td><td class="distance"></td></tr>');
+			sort();
 		//	console.error('Geocode was not successful for the following reason: ' + status)
 		}
 	});
