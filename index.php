@@ -23,7 +23,7 @@ if (!$SID) {
 
 $f3 = require('lib/f3/base.php');
 require('lib/twig/Autoloader.php');
-require('class.template.php');
+require('inc/class.template.php');
 $f3->set('AUTOLOAD', './|lib/');
 $f3->set('PLUGINS', 'lib/f3/');
 $f3->set('CACHE', false);

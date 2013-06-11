@@ -29,7 +29,7 @@ class update {
 		if ($cfg['git']['username'] && $cfg['git']['password']){
 			$output = shell_exec('git pull https://' . $cfg['git']['username'] . ':' . $cfg['git']['password'] . '@' . $cfg['git']['path'] . ' ' . $cfg['git']['branch'] . ' 2>&1');
 		} else {
-			$output = shell_exec('git pull https://' . $cfg['git']['username'] . '@' . $cfg['git']['path'] . ' ' . $cfg['git']['branch'] . ' 2>&1');
+			$output = shell_exec('git pull https://' . $cfg['git']['path'] . ' ' . $cfg['git']['branch'] . ' 2>&1');
 		}
 
 
