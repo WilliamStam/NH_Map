@@ -105,7 +105,7 @@ margin: 0;
 
 
 	var users = {{ data|raw }};
-	var user = {{ user|json_encode|raw }};
+	var me = {{ user|json_encode|raw }};
 
 
 	$("#map_canvas").height($(window).height());

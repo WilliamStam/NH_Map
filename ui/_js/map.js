@@ -5,6 +5,8 @@ var geocoder;
 var geodesic;
 var map;
 
+
+// for different user types it changes the marker
 var customIcons = {
 	user: {
 		icon  : 'http://labs.google.com/ridefinder/images/mm_20_green.png',
@@ -34,16 +36,18 @@ function initialize() {
 	};
 	map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
-	if (user.address){
-		geocoder.geocode({ 'address': user.address}, function (results, status) {
+	if (me.address){
+		geocoder.geocode({ 'address': me.address}, function (results, status) {
+
+
 
 			if (status == google.maps.GeocoderStatus.OK) {
 				var myposition = results[0].geometry.location;
 				markem(myposition);
 			} else {
-				if (user.ID && user.address) {
+				if (me.ID && me.address) {
 					$("#address-modal").modal("show")
-					alert("Couldnt find your address:\n"+user.address);
+					alert("Couldnt find your address:\n"+me.address);
 				}
 				markem();
 			}
@@ -64,8 +68,14 @@ function markem(myposition){
 }
 
 function codeAddress(user, myposition) {
-	var address = user.address;
+	var address = (user.address);
+	address = address.replace(/^[\s\n]+|[\s\n]+$/,"");
 	geocoder.geocode({ 'address': address}, function (results, status) {
+	//	console.info(user.name + " | " + address)
+	//	console.log(results)
+
+
+		//console.log(address);
 		if (status == google.maps.GeocoderStatus.OK) {
 		//	map.setCenter(results[0].geometry.location);
 
@@ -141,7 +151,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 $(document).on("click","#btn-delete",function(){
 	return confirm("Are you sure you want to remove yourself?")
 });
-$(document).on("click","#list tbody tr",function(){
+$(document).on("click","#list tbody tr.record",function(){
 	var $this = $(this);
 	//map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng($this.attr("data-lat"), $this.attr("data-lng")), 12));
 	map.panTo(new google.maps.LatLng($this.attr("data-lat"), $this.attr("data-lng")));
