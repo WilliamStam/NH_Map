@@ -41,6 +41,10 @@ function initialize() {
 				var myposition = results[0].geometry.location;
 				markem(myposition);
 			} else {
+				if (user.ID && user.address) {
+					$("#address-modal").modal("show")
+					alert("Couldnt find your address:\n"+user.address);
+				}
 				markem();
 			}
 
@@ -88,13 +92,14 @@ function codeAddress(user, myposition) {
 			//console.log(position);
 
 
-			$("#list-area table tbody").append('<tr data-distance="'+ distAway+'" data-lat="'+ position.jb+'" data-lng="'+ position.kb+'" class="record"><td>'+user.name+'</td><td class="distance">'+ distAway_label+'</td></tr>');
+			$("#list-area table tbody").append('<tr data-distance="'+ distAway+'" data-lat="'+ position.jb+'" data-lng="'+ position.kb+'" class="record" title="' + user.address + '"><td>'+user.name+'</td><td class="distance">'+ distAway_label+'</td></tr>');
 
 			if (myposition) {
 				sort();
 			}
 			bindInfoWindow(marker, map, infoWindow, html);
 		} else {
+
 
 			$("#list-area table tbody").append('<tr data-distance="999999999" class="disabled" title="Couldnt find address - ' + user.address + '"><td>' + user.name + '</td><td class="distance"></td></tr>');
 			sort();

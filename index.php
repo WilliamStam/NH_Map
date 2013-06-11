@@ -61,6 +61,15 @@ $f3->route('GET|POST /', function($f3){
 		$user = array();
 		if (isset($_SESSION['user'])){
 			$user = $_SESSION['user'];
+			if (isset($user['ID'])&& $user['ID']){
+				$a = new \DB\SQL\Mapper($f3->get("DB"), "nh_users");
+				$a->load(array('ID=?',$user['ID']));
+				$user = array(
+					"ID"      => $a->ID,
+					"name"    => $a->name,
+					"address" => $a->address
+				);
+			}
 		}
 
 
@@ -93,6 +102,7 @@ $f3->route('GET|POST /', function($f3){
 					$a->save();
 					if (!$a->dry()) {
 						$user['ID'] = $a->_id;
+						$user['address'] = $address;
 					}
 
 				}
@@ -102,6 +112,7 @@ $f3->route('GET|POST /', function($f3){
 
 
 
+				$f3->reroute("/");
 			}
 
 		if (isset($user['ID']) && $user['ID'] && $address){
@@ -110,6 +121,7 @@ $f3->route('GET|POST /', function($f3){
 			$a->address = $address;
 			$a->save();
 			$user['address']=$address;
+			$f3->reroute("/");
 		}
 
 
