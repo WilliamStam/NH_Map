@@ -31,24 +31,32 @@ function initialize() {
 		zoom     : 6,
 		center   : latlng,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
-	}
+	};
 	map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
-	geocoder.geocode({ 'address': "Johannesburg, South Africa"}, function (results, status) {
-		console.log(results[0].geometry.location)
-		if (status == google.maps.GeocoderStatus.OK) {
-			var myposition = results[0].geometry.location;
-			for (var i = 0; i < users.length; i++) {
-				codeAddress(users[i],myposition)
+	if (user.address){
+		geocoder.geocode({ 'address': user.address}, function (results, status) {
+
+			if (status == google.maps.GeocoderStatus.OK) {
+				var myposition = results[0].geometry.location;
+				markem(myposition);
+			} else {
+				markem();
 			}
-		} else {
-		//	console.error('Geocode was not successful for the following reason: ' + status)
-		}
 
-	});
+		});
+	} else {
+		markem();
+	}
 
 
 
+
+}
+function markem(myposition){
+	for (var i = 0; i < users.length; i++) {
+		codeAddress(users[i], myposition)
+	}
 }
 
 function codeAddress(user, myposition) {
@@ -67,13 +75,23 @@ function codeAddress(user, myposition) {
 			});
 			var html = '<b>' + user.name + '</b><hr>' + user.address+"<hr>";
 
-			distAway = google.maps.geometry.spherical.computeDistanceBetween(myposition, position)/1000;
-			distAway = distAway.toFixed();
-			html = html + distAway + "km away";
+			var distAway = "";
+			var distAway_label = "";
+			if (myposition){
+				distAway = google.maps.geometry.spherical.computeDistanceBetween(myposition, position) / 1000;
+				distAway = distAway.toFixed();
+				html = html + distAway + "km away";
+				distAway_label = distAway + " km"
+			}
 
 
-			$("#list-area table tbody").append('<tr data-distance="'+ distAway+'"><td>'+user.name+'</td><td class="distance">'+distAway+'km</td></tr>');
-			sort();
+			//console.log(position);
+
+
+			$("#list-area table tbody").append('<tr data-distance="'+ distAway+'" data-lat="'+ position.jb+'" data-lng="'+ position.kb+'"><td>'+user.name+'</td><td class="distance">'+ distAway_label+'</td></tr>');
+			if (myposition) {
+				sort();
+			}
 			bindInfoWindow(marker, map, infoWindow, html);
 		} else {
 		//	console.error('Geocode was not successful for the following reason: ' + status)
@@ -110,3 +128,14 @@ function sort(){
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
+
+$(document).on("click","#btn-delete",function(){
+	return confirm("Are you sure you want to remove yourself?")
+});
+$(document).on("click","#list tbody tr",function(){
+	var $this = $(this);
+	//map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng($this.attr("data-lat"), $this.attr("data-lng")), 12));
+	map.panTo(new google.maps.LatLng($this.attr("data-lat"), $this.attr("data-lng")));
+	map.setZoom(12);
+
+});

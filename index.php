@@ -40,30 +40,88 @@ $f3->set('DB', new DB\SQL('mysql:host=' . $cfg['DB']['host'] . ';dbname=' . $cfg
 $f3->set('cfg', $cfg);
 
 
+$f3->route('GET /logout', function($f3){
+	unset($_SESSION['user']);
+		$f3->reroute("/");
+});
+$f3->route('GET /remove', function($f3){
+		$user = isset($_SESSION['user'])? $_SESSION['user']:"";
+
+		if ($user['ID']){
+			unset($_SESSION['user']);
+			$a = new \DB\SQL\Mapper($f3->get("DB"), "nh_users");
+			$a->load(array('ID=?',$user['ID']));
+			$a->erase();
+		}
+
+		$f3->reroute("/");
+});
 $f3->route('GET|POST /', function($f3){
 
-		if (count($_POST)){
-			$name = isset($_POST['name'])? $_POST['name']:"";
-			$address = isset($_POST['address'])? $_POST['address']:"";
+		$user = array();
+		if (isset($_SESSION['user'])){
+			$user = $_SESSION['user'];
+		}
 
-			if ($name && $address){
+
+
+
+			$username = isset($_REQUEST['username'])? $_REQUEST['username']:"";
+			$password = isset($_REQUEST['password'])? $_REQUEST['password']:"";
+			$address = isset($_REQUEST['address'])? $_REQUEST['address']:"";
+
+			if ($username && $password){
+
 				$a = new \DB\SQL\Mapper($f3->get("DB"), "nh_users");
-				$a->load(array('name=?',$name));
-				$a->name = $name;
-				$a->address = $address;
+				$a->load(array('name=?',$username));
+				$a->name = $username;
 
-				$a->save();
+
+				if ($a->password==$password){
+					$user = array(
+						"ID"      => $a->ID,
+						"name"    => $a->name,
+						"address" => $a->address
+					);
+				} else {
+					$user = array(
+						"ID"      => "",
+						"name"    => $username,
+						"address" => ""
+					);
+					$a->password = $password;
+					$a->save();
+					if (!$a->dry()) {
+						$user['ID'] = $a->_id;
+					}
+
+				}
+
+
+				$_SESSION['user'] = $user;
+
+
 
 			}
 
+		if (isset($user['ID']) && $user['ID'] && $address){
+			$a = new \DB\SQL\Mapper($f3->get("DB"), "nh_users");
+			$a->load(array('ID=?',$user['ID']));
+			$a->address = $address;
+			$a->save();
+			$user['address']=$address;
 		}
+
+
 
 		$data = $f3->get("DB")->exec("SELECT * FROM nh_users");
 
 
 
+	//	test_array($user);
 		$tmpl = new \template("map.tmpl","ui");
 		$tmpl->data = json_encode($data);
+		$tmpl->user = $user;
 		$tmpl->output();
 
 		

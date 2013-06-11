@@ -4,12 +4,10 @@
  * Time: 9:47 AM
  */
 $i = 1;
-$sql = array(
-	/*
+
 $sql[$i++]=array(
-	
+	"ALTER TABLE `nh_users` ADD `password` VARCHAR( 30 ) NULL DEFAULT NULL AFTER `name`;"
 );
-*/
 
  if (isset($_GET['debug'])){
 	 header("Content-Type: application/json");
@@ -17,13 +15,3 @@ $sql[$i++]=array(
 	 exit();
 }
 
-
-/*
-function test_array($array) {
-	header("Content-Type: application/json");
-	echo json_encode($array);
-	exit();
-}
-
-test_array($sql);
-*/
