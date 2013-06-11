@@ -34,7 +34,7 @@ function initialize() {
 	}
 	map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
-	geocoder.geocode({ 'address': "Benoni"}, function (results, status) {
+	geocoder.geocode({ 'address': "Johannesburg, South Africa"}, function (results, status) {
 		console.log(results[0].geometry.location)
 		if (status == google.maps.GeocoderStatus.OK) {
 			var myposition = results[0].geometry.location;
