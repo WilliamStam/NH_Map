@@ -34,14 +34,23 @@ function initialize() {
 	}
 	map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
-	for (var i = 0; i < users.length; i++) {
-		codeAddress(users[i])
-	}
+	geocoder.geocode({ 'address': "Benoni"}, function (results, status) {
+		if (status == google.maps.GeocoderStatus.OK) {
+			var myposition = results[0].geometry.location;
+			for (var i = 0; i < users.length; i++) {
+				codeAddress(users[i],myposition)
+			}
+		} else {
+			console.error('Geocode was not successful for the following reason: ' + status)
+		}
+
+	});
+
 
 
 }
 
-function codeAddress(user) {
+function codeAddress(user, myposition) {
 	var address = user.address;
 	geocoder.geocode({ 'address': address}, function (results, status) {
 		if (status == google.maps.GeocoderStatus.OK) {
@@ -57,7 +66,7 @@ function codeAddress(user) {
 			});
 			var html = '<b>' + user.name + '</b><hr>' + user.address+"<hr>";
 
-			distAway = google.maps.geometry.spherical.computeDistanceBetween(new google.maps.LatLng(-23.046241, 29.904656), position)/1000;
+			distAway = google.maps.geometry.spherical.computeDistanceBetween(myposition, position)/1000;
 			distAway = distAway.toFixed();
 			html = html + distAway + "km away";
 
