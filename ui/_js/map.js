@@ -26,15 +26,16 @@ var new_users_list = [];
 var infoWindow = new google.maps.InfoWindow;
 function initialize() {
 	geocoder = new google.maps.Geocoder();
-	var latlng = new google.maps.LatLng(-23.046241, 29.904656);
+	var latlng = new google.maps.LatLng(-28.4541105, 26.796784900000034);
 	var mapOptions = {
-		zoom     : 5,
+		zoom     : 6,
 		center   : latlng,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	}
 	map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
 	geocoder.geocode({ 'address': "Benoni"}, function (results, status) {
+		console.log(results[0].geometry.location)
 		if (status == google.maps.GeocoderStatus.OK) {
 			var myposition = results[0].geometry.location;
 			for (var i = 0; i < users.length; i++) {
@@ -71,7 +72,7 @@ function codeAddress(user, myposition) {
 			html = html + distAway + "km away";
 
 
-			$("#list-area table tbody").append('<tr data-distance="'+ distAway+'"><td>'+user.name+'</td><td class="distance">'+distAway+'</td></tr>');
+			$("#list-area table tbody").append('<tr data-distance="'+ distAway+'"><td>'+user.name+'</td><td class="distance">'+distAway+'km</td></tr>');
 			sort();
 			bindInfoWindow(marker, map, infoWindow, html);
 		} else {
