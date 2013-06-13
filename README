@@ -1,1 +1,39 @@
-This file was created by JetBrains PhpStorm 6.0.2 for binding GitHub repository
+# PHP, MySQL, jQuery
+
+to get it working load up mysql and use the following table structure
+
+# SQL
+
+CREATE TABLE IF NOT EXISTS `nh_users` (
+  `ID` int(6) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `password` varchar(30) DEFAULT NULL,
+  `address` text,
+  `type` text,
+  PRIMARY KEY (`ID`)
+)
+
+# to run localy
+
+add setup a virtual host for now.. create a file config.in.php in the root
+
+$cfg['DB']['username'] = "_username_";
+$cfg['DB']['password'] = "_password_";
+$cfg['DB']['database'] = "_database_";
+
+just changing it in the config.default.inc.php file will get overwritten every time you update (it has an update feature to pull directly from github and deploy)
+
+-------------
+
+## TODO
+
+[] need to move the geocode out of where it is now. when a user adds an address it needs to lookup the address using geocode to retrieve the lng lat instead and save the lng lat to the db.. all subsiquint lookups use the lng/lat instead of an address
+[] the edit profile window needs to allow the user to edit their password and username
+[] admins need to be able to assign user marker colours (types)
+
+
+## In consideration
+
+im considering creating a groups type thing.
+
+so anyone can create a "group" with a referal link.. people then login using the link and are added to the group. they will then get a drop down of their groups. changing groups will show the group members plotted on the map. will be usefull if you're a part of multiple communities. maybe even have an option to "combine" all your groups onto 1 map as a user.
